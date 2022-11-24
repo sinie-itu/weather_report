@@ -1,0 +1,15 @@
+artifact_uri: file:///mnt/c/Users/simon/Onedrive%20-%20ITU/bdm/assignment3/mlflow_azure/mlflow/mlruns/0/b189a852cacc485d96be210a988f8abc/artifacts
+end_time: 1669307559187
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b189a852cacc485d96be210a988f8abc
+run_name: dapper-goat-568
+run_uuid: b189a852cacc485d96be210a988f8abc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1669307536356
+status: 3
+tags: []
+user_id: simon
