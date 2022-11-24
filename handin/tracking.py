@@ -30,7 +30,7 @@ from sklearn.impute import SimpleImputer
 
 # Start a run
 # TODO: Set a descriptive name. This is optional, but makes it easier to keep track of your runs.
-with mlflow.start_run(run_name="SVR"):
+with mlflow.start_run(run_name="RFR_250"):
     df = pd.read_json("dataset.json", orient="split")
 
     metrics = [
@@ -48,8 +48,9 @@ with mlflow.start_run(run_name="SVR"):
     
     encoder = OneHotEncoder(handle_unknown='ignore', sparse = False)
     ct = ColumnTransformer([('encoder transformer', encoder, ['Direction'])], remainder="passthrough")
-    model = SVR()
+    model = RandomForestRegressor(n_estimators=250)
     scaler = MaxAbsScaler()
+    
     
     pipeline = Pipeline([
          ('column_transformer', ct),
@@ -61,8 +62,9 @@ with mlflow.start_run(run_name="SVR"):
     i = 0
     mlflow.log_params({"splits":number_of_splits,"model":model,"scaler":scaler,"encoder":encoder})
     for train, test in TimeSeriesSplit(number_of_splits).split(X,y):
-        pipeline.fit(X.iloc[train],y.iloc[train])
-        predictions = pipeline.predict(X.iloc[test])
+        model = pipeline.fit(X.iloc[train],y.iloc[train])
+        #pipeline.fit(X.iloc[train],y.iloc[train])
+        predictions = model.predict(X.iloc[test])
         truth = y.iloc[test]
         from matplotlib import pyplot as plt 
         plt.plot(truth.index, truth.values, label="Truth")
@@ -84,3 +86,7 @@ with mlflow.start_run(run_name="SVR"):
             # Are there other summarizations that could be interesting?
             mean_score = sum(scores)/number_of_splits
             mlflow.log_metric(f"mean_{name}", mean_score)
+            
+    mlflow.sklearn.log_model(sk_model = model,
+                             artifact_path = 'power_gen-pyfile-model',
+                             registered_model_name = 'power_gen-pyfile-model')
